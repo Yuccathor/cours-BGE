@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="mes_quotes">
+        <item>"I'm still a geek on the inside, that's the important thing." ~ Al Yankovic</item>
+        <item>"When I was a kid, it was a huge insult to be a geek. Now it's a point of pride in a weird way." ~ J. J. Abrams</item>
+        <item>"I think I've been able to fool a lot of people because I know I'm a dork. I'm a geek." ~ Gwen Stefani</item>
+        <item>"If we knew what it was we were doing, it would not be called research, would it?" ~ Albert Einstein</item>
+        <item>"I don't like the idea of separating life and work. That notion seems dated and a bit alien to me." ~ Jeanne Moreau</item>
+    </string-array>
+</resources>
