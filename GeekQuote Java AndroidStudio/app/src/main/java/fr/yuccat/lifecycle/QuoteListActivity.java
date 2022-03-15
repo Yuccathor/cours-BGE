@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +39,14 @@ public class QuoteListActivity extends AppCompatActivity {
         Quote q = Quote.create(quote, 0, creationDate);
         this.mesQuotes.add(q);
         Log.v(TAG, "quote ajoutée : " + q.getStrQuote());
+        LinearLayout listQuotesWrapper = findViewById(R.id.ListQuoteWrapper);
+        TextView tv = new TextView(this);
+        // déclarer une nouvelle text view
+        tv.setText(q.getStrQuote());
+        // mettre le text view in the (DA)layout
+        listQuotesWrapper.addView(tv);
+        // ajouter le text view dans le layout
+
     }
 
     @Override
