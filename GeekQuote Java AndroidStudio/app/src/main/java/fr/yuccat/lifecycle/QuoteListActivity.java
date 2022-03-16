@@ -4,9 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +52,38 @@ public class QuoteListActivity extends AppCompatActivity {
         listQuotesWrapper.addView(tv);
         // ajouter le text view dans le layout
 
+        //ALternance des couleurs
+        int color;
+        if (this.mesQuotes.size() % 2 == 0) {
+            color = getResources().getColor(R.color.light_lightgray);
+        } else {
+            color = getResources().getColor(R.color.lightgray);
+        }
+        tv.setBackgroundColor(color);
+
+        Button button = (Button) findViewById(R.id.buttonAdd);
+        button.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.v(TAG, "A clickay!");
+                Toast.makeText(QuoteListActivity.this, "A clickay!", Toast.LENGTH_SHORT).show();
+                // 1 récupérer la text view avec son ID
+                EditText et = (EditText) findViewById(R.id.EditTextQuote);
+                String newQuote = et.getText().toString();
+
+                if (newQuote.isEmpty()) {
+                    Toast.makeText(QuoteListActivity.this, "La quote est vide", Toast.LENGTH_SHORT).show();
+                    return; // Permet de casser la fonction et de sortir ici dans exécuter la suite
+                } else if (newQuote.equals(getResources().getString(R.string.newQuote))) {
+                    Toast.makeText(QuoteListActivity.this, "La quote n'est pas changé", Toast.LENGTH_SHORT).show();
+                    return; // Permet de casser la fonction et de sortir ici dans exécuter la suite
+                }
+
+                // 2 extraire le texte dans la text view
+                // 3 ajouter la quote
+                addQuote(newQuote);
+            }
+        }));
     }
 
     @Override
