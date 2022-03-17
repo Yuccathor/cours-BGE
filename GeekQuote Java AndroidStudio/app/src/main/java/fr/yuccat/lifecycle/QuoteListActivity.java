@@ -2,9 +2,11 @@ package fr.yuccat.lifecycle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -22,42 +24,26 @@ public class QuoteListActivity extends AppCompatActivity {
 
     private final ArrayList<Quote> mesQuotes = new ArrayList<>();
 
+    private QuoteListAdapter adapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        adapter = new QuoteListAdapter(this.mesQuotes, this);
         String[] quotes = getResources().getStringArray(R.array.mes_quotes);
         // on récupére ce qu'on a déclaré dans array.xml grace aux ressources et son identifiant
         for (String quote : quotes) {
             this.addQuote(quote);
 
         }
-        // Resources resources = getResources();{
-        //String appName = resources.getString(R.string.app_name);
-        //Log.v(TAG, resources.getString(R.string.app_name)+ " "+ R.string.app_name);
     }
 
     void addQuote(String quote) {
         Date creationDate = new Date();
         Quote q = Quote.create(quote, 0, creationDate);
         this.mesQuotes.add(q);
-        Log.v(TAG, "quote ajoutée : " + q.getStrQuote());
-//        // LinearLayout listQuotesWrapper = findViewById(R.id.ListQuoteWrapper);
-//        TextView tv = new TextView(this);
-//        // déclarer une nouvelle text view
-//        tv.setText(q.getStrQuote());
-//        // mettre le text view in the (DA)layout
-//        // listQuotesWrapper.addView(tv);
-//        // ajouter le text view dans le layout
-//
-//        //ALternance des couleurs
-//        int color;
-//        if (this.mesQuotes.size() % 2 == 0) {
-//            color = getResources().getColor(R.color.light_lightgray);
-//        } else {
-//            color = getResources().getColor(R.color.lightgray);
-//        }
-//        tv.setBackgroundColor(color);
+        this.adapter.notifyDataSetChanged();
 
         Button button = (Button) findViewById(R.id.buttonAdd);
         button.setOnClickListener((new View.OnClickListener() {
@@ -86,7 +72,16 @@ public class QuoteListActivity extends AppCompatActivity {
         // de données pour l'affichage
         ListView listView = findViewById(R.id.listViewQuotes);
         QuoteListAdapter adapter = new QuoteListAdapter(this.mesQuotes, this);
-        listView.setAdapter(adapter);
+        listView.setAdapter(this.adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+                // Log.v(TAG, i + " " + l);
+                Intent ratingQuote = new Intent(QuoteListActivity.this, QuoteActivity.class);
+                startActivityForResult(ratingQuote, QUOTE_ACTIVITY_quote);
+                // c'est ici qu'il faut mettre l'intent
+            }
+        });
     }
 
     @Override

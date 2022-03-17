@@ -1,5 +1,6 @@
 package model;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -12,6 +13,8 @@ import fr.yuccat.lifecycle.R;
 
 public class QuoteListAdapter extends BaseAdapter {
 
+
+    private static final String TAG = QuoteListAdapter.class.getCanonicalName();
     private final ArrayList<Quote> mesQuotes;
 
     private final QuoteListActivity activity;
@@ -35,17 +38,21 @@ public class QuoteListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return i;
     }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        //        // LinearLayout listQuotesWrapper = findViewById(R.id.ListQuoteWrapper);
+        // Besoin d'infos pour connaitre le numéro de la ligne
+        // Afin de savoir si la ligne est paire ou impaire
+        Log.v(TAG, "" + i);
+        // LinearLayout listQuotesWrapper = findViewById(R.id.ListQuoteWrapper);
         TextView tv = new TextView(this.activity);
         tv.setText(this.mesQuotes.get(i).getStrQuote());
         int color;
-        if (getCount() % 2 == 0) {
+        if (i % 2 == 0) {
             color = this.activity.getResources().getColor(R.color.light_lightgray);
+
         } else {
             color = this.activity.getResources().getColor(R.color.lightgray);
         }
