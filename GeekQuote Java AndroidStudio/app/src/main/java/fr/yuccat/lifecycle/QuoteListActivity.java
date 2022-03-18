@@ -1,7 +1,9 @@
 package fr.yuccat.lifecycle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,13 @@ import model.QuoteListAdapter;
 public class QuoteListActivity extends AppCompatActivity {
 
     private final static String TAG = QuoteListActivity.class.getCanonicalName();
+
+    private static final int QUOTE_ACTIVITY_CODE = 10;
+
+    protected static final String QUOTE_TEXT = "QUOTE_TEXT";
+    protected static final String QUOTE_DATE = "QUOTE_DATE";
+    protected static final String QUOTE_RATING = "QUOTE_RATING";
+    protected static final String QUOTE_INDEX = "QUOTE_INDEX";
 
     private final ArrayList<Quote> mesQuotes = new ArrayList<>();
 
@@ -77,11 +86,63 @@ public class QuoteListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
                 // Log.v(TAG, i + " " + l);
-                Intent ratingQuote = new Intent(QuoteListActivity.this, QuoteActivity.class);
-                startActivityForResult(ratingQuote, QUOTE_ACTIVITY_quote);
+                Intent intent = new Intent(QuoteListActivity.this, QuoteActivity.class);
+                //startActivity(intent);
+                Quote quote = QuoteListActivity.this.mesQuotes.get(i);
+                intent.putExtra(QUOTE_TEXT, quote.getStrQuote());
+                intent.putExtra(QUOTE_DATE, quote.getCreationDate());
+                intent.putExtra(QUOTE_RATING, quote.getRating());
+                intent.putExtra(QUOTE_INDEX, i);
+                startActivityForResult(intent, QUOTE_ACTIVITY_CODE);
                 // c'est ici qu'il faut mettre l'intent
             }
         });
+    }
+
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case QUOTE_ACTIVITY_CODE:
+                manageQuoteActivityResult(resultCode, data);
+                break;
+            default:
+                throw new UnsupportedOperationException("le retour d'activité n'est pas codé pour le request code 10" + requestCode);
+        }
+    }
+
+    /**
+     * on récupére le résultat de la sous activité QuoteACtivity (EVITE UN CODE TROP LONG)
+     *
+     * @param resultCode
+     * @param data
+     */
+    private void manageQuoteActivityResult(int resultCode, Intent data) {
+        switch (resultCode) {
+            case RESULT_OK:
+                // DATA.GETEXTRAS()
+                Bundle extras = data.getExtras();
+                String quoteStr = extras.getString(QuoteListActivity.QUOTE_TEXT);
+                String date = extras.get(QuoteListActivity.QUOTE_DATE).toString();
+                int rating = extras.getInt(QuoteListActivity.QUOTE_RATING);
+                int index = extras.getInt(QuoteListActivity.QUOTE_INDEX);
+                // on met à jours la arraylist
+                Quote quote = Quote.create(quoteStr, rating, new Date());
+                this.mesQuotes.set(index, quote);
+                data.getExtras();
+                // on récupere les infos depuis la quoteActivity
+                // ...
+
+                // on oublie pas de notifier les changements
+                adapter.notifyDataSetChanged();
+                break;
+
+            case RESULT_CANCELED:
+                Log.v(TAG, "non modifié");
+                break;
+
+        }
     }
 
     @Override
